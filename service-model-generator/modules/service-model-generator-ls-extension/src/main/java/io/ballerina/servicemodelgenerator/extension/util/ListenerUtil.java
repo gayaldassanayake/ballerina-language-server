@@ -698,8 +698,8 @@ public class ListenerUtil {
         boolean hasExisting = !existingListeners.isEmpty();
 
         Value choicesProperty = new Value.ValueBuilder()
-                .setMetadata(new MetaData("Configure " + moduleName + " Source",
-                        "Select an existing " + moduleName + " source or create a new one"))
+                .setMetadata(new MetaData("Configure " + moduleName + " Listener",
+                        "Select an existing " + moduleName + " listener or create a new one"))
                 .value(hasExisting ? "0" : "1")
                 .types(List.of(PropertyType.types(Value.FieldType.CHOICE)))
                 .enabled(true)
@@ -762,7 +762,7 @@ public class ListenerUtil {
             }
 
             Value listenerDropdown = new Value.ValueBuilder()
-                    .metadata("Source Name", "Select an existing " + moduleName + " source")
+                    .metadata("Listener Name", "Select an existing " + moduleName + " listener")
                     .value(listenerNames.get(0))
                     .types(List.of(PropertyType.types(Value.FieldType.SINGLE_SELECT)))
                     .enabled(true)
@@ -787,7 +787,7 @@ public class ListenerUtil {
 
         String label = enabled ? "Use existing" : "Use existing (none available)";
         return new Value.ValueBuilder()
-                .metadata(label, "Select an existing " + moduleName + " source")
+                .metadata(label, "Select an existing " + moduleName + " listener")
                 .value("true")
                 .types(List.of(PropertyType.types(Value.FieldType.FORM)))
                 .enabled(enabled)
@@ -1087,6 +1087,24 @@ public class ListenerUtil {
                 .value(value)
                 .types(List.of(PropertyType.types(Value.FieldType.TEXT, "string"),
                         PropertyType.types(Value.FieldType.EXPRESSION, "string")))
+                .enabled(true)
+                .editable(false)
+                .setAdvanced(false)
+                .build();
+    }
+
+    /**
+     * Builds a read-only TEXT_SET Value for displaying multi-valued listener config fields.
+     */
+    public static Value buildReadOnlyTextSetValue(String label, String description, List<String> values) {
+        return new Value.ValueBuilder()
+                .metadata(label, description)
+                .setValues(values.stream().map(v -> (Object) v).toList())
+                .types(List.of(new PropertyType.Builder()
+                        .fieldType(Value.FieldType.TEXT_SET)
+                        .ballerinaType("string")
+                        .selected(true)
+                        .build()))
                 .enabled(true)
                 .editable(false)
                 .setAdvanced(false)
